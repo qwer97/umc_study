@@ -1,0 +1,10 @@
+// dtos/mission.dto.js
+
+export const missionAddDTO = (storeId, missionName, missionDescription, missionReward) => {
+    return {
+        storeId,
+        missionName,
+        missionDescription,
+        missionReward
+    };
+};

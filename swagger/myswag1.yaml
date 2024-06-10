@@ -1,0 +1,138 @@
+paths:
+  /store/review:
+    post:
+      tags:
+        - Store
+      summary: 가게에 리뷰 추가하기
+      parameters:
+        - name: reviewData
+          in: body
+          required: true
+          schema:
+            properties:
+              store_id:
+                type: integer
+                description: 가게 ID
+                example: 123
+              user_id:
+                type: integer
+                description: 유저 ID
+                example: 456
+              review_text:
+                type: string
+                description: 리뷰 내용
+                example: "맛있어요!"
+              rating:
+                type: number
+                format: float
+                description: 평점 (0~5)
+                example: 4.5
+              review_date:
+                type: string
+                format: date
+                description: 리뷰 작성 날짜 (ISO 8601)
+                example: "2024-06-12"
+      responses:
+        '200':
+          description: 리뷰 추가 성공
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 200
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: integer
+                example: 2000
+              message:
+                type: string
+                example: "success!"
+        '400':
+          description: 잘못된 요청
+          schema:
+            $ref: '#/definitions/Error400'
+        '500':
+          description: 서버 에러
+          schema:
+            $ref: '#/definitions/Error500'
+
+  /store/mission/add:
+    post:
+      tags:
+        - Store
+      summary: 가게의 미션을 도전 중인 미션에 추가하기
+      parameters:
+        - name: missionData
+          in: body
+          required: true
+          schema:
+            properties:
+              store_id:
+                type: integer
+                description: 가게 ID
+                example: 123
+              mission_id:
+                type: integer
+                description: 미션 ID
+                example: 789
+      responses:
+        '200':
+          description: 미션 추가 성공
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 200
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: integer
+                example: 2000
+              message:
+                type: string
+                example: "success!"
+        '400':
+          description: 잘못된 요청
+          schema:
+            $ref: '#/definitions/Error400'
+        '500':
+          description: 서버 에러
+          schema:
+            $ref: '#/definitions/Error500'
+
+definitions:
+  Error400:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 400
+      isSuccess:
+        type: boolean
+        example: false
+      code:
+        type: string
+        example: COMMON001
+      message:
+        type: string
+        example: 잘못된 요청입니다
+  Error500:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 500
+      isSuccess:
+        type: boolean
+        example: false
+      code:
+        type: string
+        example: COMMON000
+      message:
+        type: string
+        example: 서버 에러, 관리자에게 문의 바랍니다.
