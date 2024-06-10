@@ -2,6 +2,7 @@
 
 export const insertUserSql = "INSERT INTO user (email, user_name, gender, birth, user_address, user_spec_address, user_phone) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
+
 export const getUserID = "SELECT * FROM user WHERE user_id = ?";
 
 export const connectFoodCategory = "INSERT INTO user_favor_category (f_category_id, user_id) VALUES (?, ?);";

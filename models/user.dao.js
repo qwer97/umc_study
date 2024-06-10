@@ -1,11 +1,10 @@
-// models/user.dao.js
+// user.dao.js
 
-import { pool } from "../../config/db.config";
-import { BaseError } from "../../config/error";
-import { status } from "../../config/response.status";
-import { connectFoodCategory, confirmEmail, getUserID, insertUserSql, getPreferToUserID } from "./user.sql.js";
+import { BaseError } from '../config/error.js';
+import { status } from '../config/response.status.js';
+import { pool } from '../config/db.config.js'; // 필요 시 import 추가
+import { connectFoodCategory, confirmEmail, getUserID, insertUserSql, getPreferToUserID } from './user.sql.js';
 
-// User 데이터 삽입
 export const addUser = async (data) => {
     try{
         const conn = await pool.getConnection();
@@ -31,19 +30,18 @@ export const addUser = async (data) => {
 export const getUser = async (userId) => {
     try {
         const conn = await pool.getConnection();
-        const [user] = await pool.query(getUserID, userId);
+        const [user] = await conn.query(getUserID, [userId]);
 
-        console.log(user);
-
-        if(user.length == 0){
-            return -1;
+        if (user.length === 0) {
+            conn.release();
+            throw new BaseError({ ...status.USER_NOT_FOUND, data: { userId } });
         }
 
         conn.release();
-        return user;
+        return user[0];
         
     } catch (err) {
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        throw err;
     }
 }
 
@@ -52,14 +50,12 @@ export const setPrefer = async (userId, foodCategoryId) => {
     try {
         const conn = await pool.getConnection();
         
-        await pool.query(connectFoodCategory, [foodCategoryId, userId]);
+        await conn.query(connectFoodCategory, [foodCategoryId, userId]);
 
         conn.release();
         
-        return;
     } catch (err) {
-        throw new BaseError(status.PARAMETER_IS_WRONG);
-
+        throw err;
     }
 }
 
@@ -67,12 +63,12 @@ export const setPrefer = async (userId, foodCategoryId) => {
 export const getUserPreferToUserID = async (userID) => {
     try {
         const conn = await pool.getConnection();
-        const prefer = await pool.query(getPreferToUserID, userID);
+        const [prefer] = await conn.query(getPreferToUserID, [userID]);
 
         conn.release();
 
         return prefer;
     } catch (err) {
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        throw err;
     }
 }
