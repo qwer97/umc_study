@@ -5,26 +5,52 @@ import { status } from '../config/response.status.js';
 import { pool } from '../config/db.config.js'; // 필요 시 import 추가
 import { connectFoodCategory, confirmEmail, getUserID, insertUserSql, getPreferToUserID } from './user.sql.js';
 
-export const addUser = async (data) => {
-    try{
-        const conn = await pool.getConnection();
-        
-        const [confirm] = await pool.query(confirmEmail, data.email);
+export const addUser = async (userData) => {
+    console.log("addUser called with:", userData);
 
-        if(confirm[0].isExistEmail){
-            conn.release();
-            return -1;
+    const {
+        email,
+        name,
+        gender,
+        birth,
+        addr,
+        specAddr,
+        phone
+    } = userData;
+
+    try {
+        const connection = await pool.getConnection();
+        console.log("Database connection established");
+
+        const [result] = await connection.execute(insertUserSql, [
+            email,
+            name,
+            gender,
+            birth,
+            addr,
+            specAddr,
+            phone
+        ]);
+        connection.release();
+        console.log("addUser result:", result);
+        return result.insertId;
+
+    } catch (err) {
+        console.error("Error in addUser:", err);
+        if (err.code === 'ER_DUP_ENTRY') {
+            throw new BaseError({
+                isSuccess: false,
+                status: 400,
+                message: 'Duplicate entry for email'
+            });
         }
-
-        const result = await pool.query(insertUserSql, [data.email, data.name, data.gender, data.birth, data.addr, data.specAddr, data.phone]);
-
-        conn.release();
-        return result[0].insertId;
-        
-    }catch (err) {
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        throw new BaseError({
+            isSuccess: false,
+            status: 500,
+            message: err.message || 'Internal server error'
+        });
     }
-}
+};
 
 // 사용자 정보 얻기
 export const getUser = async (userId) => {

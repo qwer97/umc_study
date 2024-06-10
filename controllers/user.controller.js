@@ -7,9 +7,17 @@ import { BaseError } from '../config/error.js';
 
 export const userSignin = async (req, res, next) => {
     console.log("회원가입을 요청하였습니다!");
-    console.log("body:", req.body);
+    console.log("body:", req.body); // 로그 추가
 
     try {
+        if (!req.body) {
+            throw new BaseError({
+                isSuccess: false,
+                status: 400,
+                message: "Request body is missing"
+            });
+        }
+
         const result = await joinUser(req.body);
         console.log("joinUser result:", result); // 디버깅 로그 추가
         console.log("Status SUCCESS:", status.SUCCESS); // 디버깅 로그 추가
