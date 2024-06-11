@@ -28,3 +28,24 @@ export const getMissionList = async () => {
         throw error;
     }
 };
+
+
+export const completeMissionInDao = async (missionId) => {
+  let connection;
+  try {
+      connection = await pool.getConnection();
+      await connection.beginTransaction();
+      const updateQuery = 'UPDATE store_mission SET mission_status = "Completed" WHERE mission_id = ?';
+      const [updateResult] = await connection.execute(updateQuery, [missionId]);
+      await connection.commit();
+      connection.release();
+      return updateResult;
+  } catch (error) {
+      if (connection) {
+          await connection.rollback();
+          connection.release();
+      }
+      console.error('Error completing mission in DAO:', error);
+      throw error;
+  }
+};

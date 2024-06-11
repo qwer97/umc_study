@@ -29,13 +29,16 @@ app.use('/store', reviewRouter);
 app.use('/missions', missionRouter); // mission routes 추가
 
 
-
 app.post('/store/review', (req, res) => {
     res.send('리뷰가 성공적으로 추가되었습니다.');
   });
   
 app.post('/store/mission/add', (req, res) => {
     res.send('미션을 성공적으로 추가하였습니다.');
+});
+
+app.post('/store/mission/complete', (req, res) => {
+    res.send('미션 완료')
 });
   
 

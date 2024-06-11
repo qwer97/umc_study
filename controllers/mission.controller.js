@@ -1,5 +1,5 @@
-import { addMission, getMission } from '../services/mission.service.js';
-import { addMissionToStore , getMissionList } from '../models/mission.dao.js'; // mission dao import 추가
+import { addMission, getMission,completeMission } from '../services/mission.service.js';
+import { addMissionToStore , getMissionList,completeMissionInDao } from '../models/mission.dao.js'; // mission dao import 추가
 import { response } from '../config/response.js';
 import { status } from '../config/response.status.js';
 import { BaseError } from '../config/error.js';
@@ -27,5 +27,21 @@ export const fetchMission = async (req, res) => {
     } catch (error) {
         console.error('Error fetching missions:', error);
         return res.status(status.INTERNAL_SERVER_ERROR.status).json(response(status.INTERNAL_SERVER_ERROR, 'Failed to fetch missions'));
+    }
+};
+
+
+export const completeMissionStore = async (req, res) => {
+    try {
+
+        const missionId = req.body.mission_id;
+
+        const result = await completeMission(missionId);
+        
+        res.status(status.OK).json(response(status.OK, true, status.MISSION_COMPLETED, 'Mission completed successfully', result));
+        
+    } catch (error) {
+        console.error('Error completing mission:', error);
+        return res.status(status.INTERNAL_SERVER_ERROR).json(response(status.INTERNAL_SERVER_ERROR, false, status.SERVER_ERROR, 'Failed to complete mission'));
     }
 };
