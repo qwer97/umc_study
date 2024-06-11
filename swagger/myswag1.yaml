@@ -13,11 +13,11 @@ paths:
               store_id:
                 type: integer
                 description: 가게 ID
-                example: 123
+                example: 1
               user_id:
                 type: integer
                 description: 유저 ID
-                example: 456
+                example: 1
               review_text:
                 type: string
                 description: 리뷰 내용
@@ -27,11 +27,7 @@ paths:
                 format: float
                 description: 평점 (0~5)
                 example: 4.5
-              review_date:
-                type: string
-                format: date
-                description: 리뷰 작성 날짜 (ISO 8601)
-                example: "2024-06-12"
+
       responses:
         '200':
           description: 리뷰 추가 성공

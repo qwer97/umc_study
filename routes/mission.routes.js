@@ -1,12 +1,14 @@
 // routes/mission.routes.js
 
 import express from 'express';
-import { addMissionToStore } from '../controllers/mission.controller.js';
+import { addMissionStore,fetchMission } from '../controllers/mission.controller.js';
 import asyncHandler from 'express-async-handler';
 
-export const userRouter = express.Router();
+export const missionRouter = express.Router();
 
 // POST request to add a mission to a store
-router.post('/store/mission/add', asyncHandler(addMissionToStore));
+missionRouter.post('/store/mission/add', asyncHandler(addMissionStore));
 
-export default router;
+missionRouter.get('/', asyncHandler(fetchMission));
+
+export default missionRouter;
