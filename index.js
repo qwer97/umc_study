@@ -8,6 +8,8 @@ import { response } from './config/response.js'; // response 함수 import 추�
 import { status } from './config/response.status.js'; // status import 추가
 import { reviewRouter } from './routes/review.rotues.js';
 import { missionRouter } from './routes/mission.routes.js';
+import { completeMissionStore } from './controllers/mission.controller.js';
+
 
 dotenv.config();    // .env 파일 사용 (환경 변수 관리)
 
@@ -37,10 +39,17 @@ app.post('/store/mission/add', (req, res) => {
     res.send('미션을 성공적으로 추가하였습니다.');
 });
 
-app.post('/store/mission/complete', (req, res) => {
-    res.send('미션 완료')
+
+app.post('/store/mission/complete', async (req, res) => {
+    const missionId = req.body.mission_id;
+    try {
+        const result = await completeMissionStore(req, res);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
-  
+
 
 app.use((err, req, res, next) => {
     res.locals.message = err.message;   

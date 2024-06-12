@@ -33,15 +33,13 @@ export const fetchMission = async (req, res) => {
 
 export const completeMissionStore = async (req, res) => {
     try {
-
         const missionId = req.body.mission_id;
-
         const result = await completeMission(missionId);
-        
-        res.status(status.OK).json(response(status.OK, true, status.MISSION_COMPLETED, 'Mission completed successfully', result));
-        
+
+        res.status(status.OK.status).json(response(status.OK, result));
     } catch (error) {
         console.error('Error completing mission:', error);
-        return res.status(status.INTERNAL_SERVER_ERROR).json(response(status.INTERNAL_SERVER_ERROR, false, status.SERVER_ERROR, 'Failed to complete mission'));
+
+        res.status(status.INTERNAL_SERVER_ERROR.status).json(response(status.INTERNAL_SERVER_ERROR, 'Failed to complete mission'));
     }
 };
